@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="TV Search Suite" verbose="1">
+	<test name="TV Search Tests" preserve-order="true">
+		<parameter name="producer" value="Samsung" />
+		<parameter name="priceTo" value="1000" />
+		<parameter name="yearFrom" value="2013" />
+		<parameter name="displaySizeFrom" value="39" />
+		<parameter name="displaySizeTo" value="42" />
+		<classes>
+			<class name="n.yarmak.tests.TVSearchTest" />
+		</classes>
+	</test>
+</suite>

@@ -1,7 +1,7 @@
 package webdriver.elements;
 
 import java.lang.reflect.Field;
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -63,6 +63,20 @@ public abstract class BaseElement extends BaseEntity {
 		return element;
 	}
 
+	/**
+	 * 
+	 * @returnList<RemoteWebElement> 
+	 */
+	public List<RemoteWebElement> getElements() {
+		waitForIsElementPresent();
+		List<WebElement> elements = browser.getDriver().findElements(locator);
+		List<RemoteWebElement> results = new ArrayList<RemoteWebElement>();
+		for (WebElement el : elements) {
+			results.add((RemoteWebElement) el);
+		}
+		return results;
+	}
+	
 	/**
 	 * @param elementToSet
 	 *            RemoteWebElement
@@ -167,14 +181,13 @@ public abstract class BaseElement extends BaseEntity {
 	 */
 	public void sendKeys(Keys key) {
 		waitForIsElementPresent();
-		browser.getDriver().findElement(locator).sendKeys(key);
+		browser.getDriver().findElement(locator).sendKeys(key);;;
 	}
 
 	/**
 	 * Wait for element is present.
 	 */
 	public void waitForIsElementPresent() {
-
 		isPresent(Integer.valueOf(browser.getTimeoutForCondition()));
 		// troubleshooting if element is not found
 		if (!element.isDisplayed()) {// Browser.getTroubleShooting
@@ -242,6 +255,14 @@ public abstract class BaseElement extends BaseEntity {
 		element.click();
 	};
 
+	/**
+	 * Move mouse to item
+	 */
+	public void mouseMove(){
+		waitForIsElementPresent();
+		browser.getDriver().getMouse().mouseMove(element.getCoordinates());
+	}
+	
 	/**
 	 * Get the item text (inner text).
 	 * 

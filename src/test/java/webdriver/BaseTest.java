@@ -34,6 +34,7 @@ public abstract class BaseTest extends BaseEntity {
 			logger.warnRed(getLoc("loc.test.failed"));
 			logger.warn("");
 			logger.fatal(e.getMessage());
+			e.printStackTrace();
 		}
 
 	}

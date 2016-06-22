@@ -59,7 +59,7 @@ public abstract class BrowserFactory {
 			// local security request flag
 			// INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS
 			// (but this flag may cause appearing "skipped" tests)
-			if (new PropertiesResourceManager(Browser.PROPERTIES_FILE).getProperty("localrun")
+			if (new PropertiesResourceManager(Browser.SELENIUM_PROPERTIES_FILE).getProperty("localrun")
 					.equalsIgnoreCase("true")) {
 				DesiredCapabilities cp = DesiredCapabilities.internetExplorer();
 				cp.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS, true);

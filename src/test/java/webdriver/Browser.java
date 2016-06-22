@@ -13,8 +13,9 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import webdriver.elements.Label;
 import com.google.common.base.Strings;
+
+import webdriver.elements.Label;
 
 /**
  * The main class to access the browser, which extends the capabilities of the
@@ -26,25 +27,18 @@ public final class Browser {
 	private static final String DEFAULT_CONDITION_TIMEOUT = "defaultConditionTimeout";
 	private static final String DEFAULT_PAGE_LOAD_TIMEOUT = "defaultPageLoadTimeout";
 
-	// private static final String URL_LOGIN_PAGE = "urlLoginPage";
-
 	// имя файла с настройками Selenium
-	/**
-	 * speedValue=100 defaultPageLoadTimeout=60 defaultConditionTimeout=180
-	 * urlLoginPage=http://opensesame:%23pears0n@dev.pearsoninnovationlabs.com/
-	 * #overrided in Browser.initProperties-default=firefox; #if null - use
-	 * argument 'browser' to JVM; if other value (without '*'), #will use it as
-	 * browserStartCommand #Usage: #firefox #iexplore #chrome #null
-	 * browser=iexplore
-	 */
-	static final String PROPERTIES_FILE = "selenium.properties";
+	static final String SELENIUM_PROPERTIES_FILE = "selenium.properties";
+	// имя файла с URL-ми страниц
+	static final String STAGE_PROPERTIES_FILE = "stage.properties";
 	private static final String BROWSER_BY_DEFAULT = "firefox";
 	private static final String BROWSER_PROP = "browser";
 
 	// browsers
 	private static Browser instance;
 	private static RemoteWebDriver driver;
-	public static PropertiesResourceManager props;
+	public static PropertiesResourceManager seleniumProps;
+	public static PropertiesResourceManager stageProps;
 
 	// поля класса
 
@@ -70,7 +64,7 @@ public final class Browser {
 	}
 
 	public static String getBaseUrl() {
-		return System.getProperty("urlLoginPage", props.getProperty("urlLoginPage"));
+		return System.getProperty("mainForm", stageProps.getProperty("mainForm"));
 	}
 
 	/**
@@ -136,16 +130,17 @@ public final class Browser {
 	 */
 	private static void initProperties() {
 
-		props = new PropertiesResourceManager(PROPERTIES_FILE);
-		timeoutForPageLoad = props.getProperty(DEFAULT_PAGE_LOAD_TIMEOUT);
-		timeoutForCondition = props.getProperty(DEFAULT_CONDITION_TIMEOUT);
+		seleniumProps = new PropertiesResourceManager(SELENIUM_PROPERTIES_FILE);
+		stageProps = new PropertiesResourceManager(STAGE_PROPERTIES_FILE);
+		timeoutForPageLoad = seleniumProps.getProperty(DEFAULT_PAGE_LOAD_TIMEOUT);
+		timeoutForCondition = seleniumProps.getProperty(DEFAULT_CONDITION_TIMEOUT);
 
-		if (Strings.isNullOrEmpty(props.getProperty(BROWSER_PROP))) {
+		if (Strings.isNullOrEmpty(seleniumProps.getProperty(BROWSER_PROP))) {
 			// using System.getProperty
 			currentBrowser = Browsers.valueOf(System.getProperty(BROWSER_PROP, BROWSER_BY_DEFAULT).toUpperCase());
 		} else {
 			// using selenium.properties
-			String proper = props.getProperty(BROWSER_PROP);
+			String proper = seleniumProps.getProperty(BROWSER_PROP);
 			currentBrowser = Browsers.valueOf(proper.toUpperCase());
 		}
 	}
@@ -179,17 +174,9 @@ public final class Browser {
 
 	/**
 	 * maximizes the window
-	 * <p>
-	 * works on IE7, IE8, IE9, FF 3.6
 	 */
 	public void windowMaximise() {
-		try {
-			driver.executeScript(
-					"if (window.screen) {window.moveTo(0, 0);window.resizeTo(window.screen.availWidth,window.screen.availHeight);};");
-		} catch (Exception e) {
-			// A lot of browsers crash here
-		}
-
+		driver.manage().window().maximize();
 	}
 
 	/**
