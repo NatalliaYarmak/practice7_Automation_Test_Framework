@@ -2,9 +2,9 @@ package webdriver.elements;
 
 import org.openqa.selenium.By;
 
-public class MultipleSelection extends BaseElement {
+public class MultiSelect extends BaseElement {
 
-	public MultipleSelection(By locator, String name) {
+	public MultiSelect(By locator, String name) {
 		super(locator, name);
 	}
 

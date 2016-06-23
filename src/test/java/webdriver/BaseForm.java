@@ -110,5 +110,10 @@ public abstract class BaseForm extends BaseEntity {
 			fatal(String.format(getLoc("loc.form.doesnt.appears"), title));
 		}
 	}
+	
+	public void back(){
+		
+		
+	}
 
 }

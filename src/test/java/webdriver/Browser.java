@@ -2,6 +2,7 @@ package webdriver;
 
 import static webdriver.Logger.getLoc;
 
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import javax.naming.NamingException;
@@ -9,6 +10,7 @@ import javax.naming.NamingException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -46,6 +48,10 @@ public final class Browser {
 	private static String timeoutForCondition;
 
 	public static Browsers currentBrowser;
+	private String parentHandle;
+	private String name;
+	private String handle;
+	private static int instanceCount = 0;
 
 	/**
 	 * Private constructor (singleton pattern)
@@ -54,8 +60,81 @@ public final class Browser {
 		Logger.getInstance().info(String.format(getLoc("loc.browser.ready"), currentBrowser.toString()));
 	}
 
+	public Browser(String url) {
+        parentHandle = driver.getWindowHandle();
+        name = createUniqueName();
+        handle = createWindow(url);
+        //Switch to that window and load the url to wait 
+        switchToWindow().get(url);
+	}
+
+    public String getWindowHandle() {
+        return handle;
+    }
+    
+    public String getParentHandle() {
+        return parentHandle;
+    }
+    
+    public void close() {
+        switchToWindow().close();
+        handle = "";
+        //Switch back to the parent window 
+        driver.switchTo().window(parentHandle);
+    }
+    
+    public WebDriver switchToWindow() {
+        checkForClosed();
+        return driver.switchTo().window(handle);
+    }
+    
+    private void checkForClosed() {
+        if (handle == null || handle.equals(""))
+            throw new WebDriverException("Web Window closed or not initialized");
+    }
+    
+	private String createWindow(String url) {
+        //Record old handles 
+        Set < String > oldHandles = driver.getWindowHandles();
+        parentHandle = driver.getWindowHandle();
+        //Inject an anchor element 
+        ((JavascriptExecutor) driver).
+        executeScript(
+            injectAnchorTag(name, url)
+        );
+        //Click on the anchor element 
+        driver.findElement(By.id(name)).click();
+        handle = getNewHandle(oldHandles);
+        return handle;
+	}
+	
+    private String getNewHandle(Set < String > oldHandles) {
+        Set < String > newHandles = driver.getWindowHandles();
+        newHandles.removeAll(oldHandles);
+        //Find the new window 
+        for (String handle: newHandles)
+            return handle;
+        return null;
+    }
+
+    private String injectAnchorTag(String id, String url) {
+        return String.format("var anchorTag = document.createElement('a'); " +
+            "anchorTag.appendChild(document.createTextNode('nwh'));" +
+            "anchorTag.setAttribute('id', '%s');" +
+            "anchorTag.setAttribute('href', '%s');" +
+            "anchorTag.setAttribute('target', '_blank');" +
+            "anchorTag.setAttribute('style', 'display:block;');" +
+            "document.getElementsByTagName('body')[0].appendChild(anchorTag);",
+            id, url
+        );
+    }
+    
+	private static String createUniqueName() {
+		return "a_Browser_" + instanceCount++;
+	}
+
 	/**
-	 * Checks is Browser slive
+	 * Checks is Browser alive
 	 * 
 	 * @return true\false
 	 */
@@ -268,6 +347,10 @@ public final class Browser {
 		public String toString() {
 			return value;
 		}
+	}
+	
+	public void back() {
+		driver.navigate().back();
 	}
 
 }

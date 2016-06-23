@@ -51,8 +51,7 @@ public class TVSearchTest extends BaseTest{
 		tvForm.setQueryParams(producer, priceTo, yearFrom, displaySizeFrom, displaySizeTo);
 		
 		logger.step(5);
-		tvForm.checkSearchResults(producer, priceTo, yearFrom, displaySizeFrom, displaySizeTo);
-		
+		assertEquals(true, tvForm.checkSearchResults(producer, priceTo, yearFrom, displaySizeFrom, displaySizeTo));
 	}
 
 }

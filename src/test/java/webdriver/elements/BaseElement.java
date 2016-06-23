@@ -65,7 +65,7 @@ public abstract class BaseElement extends BaseEntity {
 
 	/**
 	 * 
-	 * @returnList<RemoteWebElement> 
+	 * @return List<RemoteWebElement> 
 	 */
 	public List<RemoteWebElement> getElements() {
 		waitForIsElementPresent();
@@ -326,4 +326,14 @@ public abstract class BaseElement extends BaseEntity {
 		return false;
 	}
 
+	/**
+	 * 
+	 * @param attrName
+	 * @return
+	 */
+	public String getAttribute(String attrName) {
+		waitForIsElementPresent();
+		return element.getAttribute(attrName);
+	}
+	
 }

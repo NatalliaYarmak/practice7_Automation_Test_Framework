@@ -1,13 +1,10 @@
 package webdriver;
 
-import static org.testng.AssertJUnit.assertTrue;
-
 import java.io.BufferedReader;
-
 import java.io.InputStreamReader;
 
+import org.testng.Assert;
 import org.testng.ITestContext;
-
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 
@@ -86,7 +83,7 @@ public abstract class BaseEntity {
 	 */
 	protected void fatal(final String message) {
 		logger.fatal(formatLogMsg(message));
-		assertTrue(formatLogMsg(message), false);
+		Assert.fail(formatLogMsg(message));
 	}
 
 	/**
@@ -229,4 +226,17 @@ public abstract class BaseEntity {
 		logger.info(String.format("----==[ %1$s ]==----", info));
 	}
 
+	public void createNewTab(String url) {
+		try {
+			browser = new Browser(url); // “url” - ссылка новой вкладки	
+			
+		} catch (Exception e) {
+			System.err.println("Couldn't load second page");
+			e.printStackTrace();
+		}
+	}
+
+	public void closeTab() {
+		browser.close();
+	}
 }
