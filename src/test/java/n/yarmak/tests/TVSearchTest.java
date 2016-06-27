@@ -42,10 +42,12 @@ public class TVSearchTest extends BaseTest{
 		MainForm mainForm = new MainForm();
 		
 		logger.step(2);
-		CatalogForm catalogForm = mainForm.navigateMainMenu(MainForm.CATALOG_TEXT);
+		mainForm.navigateMainMenu(MainForm.CATALOG_TEXT);
+		CatalogForm catalogForm = new CatalogForm();
 		
 		logger.step(3);
-		TVForm tvForm = catalogForm.navigateCatalogBar(CatalogForm.TV_TEXT);
+		catalogForm.navigateCatalogBar(CatalogForm.TV_TEXT);
+		TVForm tvForm = new TVForm();
 		
 		logger.step(4);
 		tvForm.setQueryParams(producer, priceTo, yearFrom, displaySizeFrom, displaySizeTo);

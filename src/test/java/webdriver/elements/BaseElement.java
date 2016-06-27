@@ -254,7 +254,21 @@ public abstract class BaseElement extends BaseEntity {
 		}
 		element.click();
 	};
-
+	
+	/**
+	 * Click on the item and wait for page load
+	 */
+	public void clickAndWait() {
+		waitForIsElementPresent();
+		info(getLoc("loc.clicking"));
+		browser.getDriver().getMouse().mouseMove(element.getCoordinates());
+		if (browser.getDriver() instanceof JavascriptExecutor) {
+			((JavascriptExecutor) browser.getDriver()).executeScript("arguments[0].style.border='3px solid red'",
+					element);
+		}
+		element.click();
+		browser.waitForPageToLoad();
+	};
 	/**
 	 * Move mouse to item
 	 */

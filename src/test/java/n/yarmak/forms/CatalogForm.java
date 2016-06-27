@@ -3,13 +3,12 @@ package n.yarmak.forms;
 import org.openqa.selenium.By;
 
 import webdriver.BaseForm;
-import webdriver.Browser;
-import webdriver.elements.MenuItem;
+import webdriver.elements.Label;
 
 public class CatalogForm extends BaseForm {
 
 	private static By catalogFormLocator = By.xpath("//div[contains(@class,'catalog-bar-main')]");
-	private static String catalogFormTitle = System.getProperty("catalogForm", Browser.stageProps.getProperty("catalogForm"));
+	private static String catalogFormTitle = "Catalog Form";
 	private String catalogBarPattern = "//a[contains(@class,'catalog-bar') and contains(.,'%s')]";
 	public static final String TV_TEXT = "Телевизоры";
 
@@ -17,11 +16,10 @@ public class CatalogForm extends BaseForm {
 		super(catalogFormLocator, catalogFormTitle);
 	}
 
-	public TVForm navigateCatalogBar(String text) {
+	public void navigateCatalogBar(String text) {
 		String catalogBarXpath = String.format(catalogBarPattern, text);
-		MenuItem catalogMenuItem = new MenuItem(By.xpath(catalogBarXpath), text);
-		catalogMenuItem.click();
-		return new TVForm();
+		Label catalogMenuItem = new Label(By.xpath(catalogBarXpath), text);
+		catalogMenuItem.clickAndWait();
 	}
 
 }

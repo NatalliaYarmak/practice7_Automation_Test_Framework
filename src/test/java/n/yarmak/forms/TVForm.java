@@ -7,11 +7,9 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.remote.RemoteWebElement;
 
 import webdriver.BaseForm;
-import webdriver.Browser;
 import webdriver.elements.Checkbox;
 import webdriver.elements.DropDownList;
 import webdriver.elements.Label;
-import webdriver.elements.MultiSelect;
 import webdriver.elements.TextBox;
 
 public class TVForm extends BaseForm {
@@ -22,7 +20,7 @@ public class TVForm extends BaseForm {
 	public static final String YEAR_TEXT = "Дата выхода на рынок";
 	public static final String DISPLAY_SIZE_TEXT = "Диагональ";
 
-	private static String tvFormTitle = System.getProperty("tvForm", Browser.stageProps.getProperty("tvForm"));
+	private static String tvFormTitle = "TV Form";
 	private static String multipleSelectionLocatorPattern = "//span[contains(.,'%s')]/following::span[contains(.,'%s')][1]/parent::div/parent::div";
 	private static String producerLocatorPattern = "//div[contains(@class,'popover')]/.//input[@value='%s']/parent::span";
 	private static String inchPattern = "%s\"";
@@ -41,7 +39,7 @@ public class TVForm extends BaseForm {
 	private static By searchResultLocator = By.xpath(
 			"//div[@id='schema-products']/div[contains(@class,'schema-product')]/descendant::div[contains(@class,'image')]/a");
 
-	MultiSelect multSlctProducers = new MultiSelect(producersListLocator, "producers list");
+	Label multSlctProducers = new Label(producersListLocator, "producers list");
 	private TextBox txtPriceTo = new TextBox(priceToLocator, "price to");
 	private TextBox txtYearFrom = new TextBox(yaerFromLocator, "year from");
 	private DropDownList slctDisplaySizeFrom = new DropDownList(displaySizeFromLocator, "display size from");
@@ -56,7 +54,7 @@ public class TVForm extends BaseForm {
 
 		// пододвинем мышь, чтобы метка с числом результатов не заслоняла
 		// элемент со списком производителей
-		this.txtPriceTo.mouseMove();
+		txtPriceTo.mouseMove();
 		// открыть менюшку с производителями
 		multSlctProducers.click();
 		Checkbox chckProducer = new Checkbox(By.xpath(String.format(producerLocatorPattern, producer.toLowerCase())),
@@ -65,11 +63,11 @@ public class TVForm extends BaseForm {
 		// закрыть менюшку с производителями
 		multSlctProducers.click();
 
-		this.txtPriceTo.setText(priceTo);
-		this.txtYearFrom.setText(yearFrom);
+		txtPriceTo.setText(priceTo);
+		txtYearFrom.setText(yearFrom);
 
-		this.slctDisplaySizeFrom.selectByLabel(String.format(inchPattern, displaySizeFrom));
-		this.slctDisplaySizeTo.selectByLabel(String.format(inchPattern, displaySizeTo));
+		slctDisplaySizeFrom.selectByLabel(String.format(inchPattern, displaySizeFrom));
+		slctDisplaySizeTo.selectByLabel(String.format(inchPattern, displaySizeTo));
 
 	}
 
